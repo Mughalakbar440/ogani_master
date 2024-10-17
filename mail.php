@@ -1,16 +1,21 @@
 <?php
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
+function pre($p){
+    echo"<pre>";
+    print_r($p);
+    echo"</pre>";
+    exit;
+}
 require 'vendor/autoload.php'; 
 
 require 'vendor/phpmailer/phpmailer/src/Exception.php';
 require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require 'vendor/phpmailer/phpmailer/src/SMTP.php';
 
+pre($_SESSION);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $otp = rand(100000, 999999);
     $mail = new PHPMailer(true);
 
     try {
