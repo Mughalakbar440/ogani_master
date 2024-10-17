@@ -30,9 +30,9 @@
 
                 $_SESSION['User'] = [
                     'otp' => $otp,
-                    'Email' => $login_user['Email']
+                    'email' => $login_user['Email']
                 ];
-                header("Location:otp.php");
+                header("Location:mail.php");
                 exit();
             }
         }

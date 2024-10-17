@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 function pre($p){
@@ -14,10 +15,10 @@ require 'vendor/phpmailer/phpmailer/src/Exception.php';
 require 'vendor/phpmailer/phpmailer/src/PHPMailer.php';
 require 'vendor/phpmailer/phpmailer/src/SMTP.php';
 
-pre($_SESSION);
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $mail = new PHPMailer(true);
+    $otp = $_SESSION['User']['otp']?$_SESSION['User']['otp']:'otp not set';
+    $email = $_SESSION['User']['email']?$_SESSION['User']['email']:'email not set';
 
+    $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com';
@@ -99,10 +100,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $mail->AltBody = "Your OTP code is $otp. Please use this code to verify your email address.";
 
         $mail->send();
+        if ($mail->send()) {
+           header("Location:otp.php");
+           exit;
+        }
         echo 'OTP has been sent to your email address: ' . htmlspecialchars($email);
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
-} else {
-    echo 'Invalid request method.';
-}
