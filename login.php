@@ -8,40 +8,6 @@
         exit();
     }
 
-    if (isset($_POST['login'])) {
-        // Retrieve and sanitize user input
-        $email = mysqli_real_escape_string($conn, $_POST['Email']);
-        $password = mysqli_real_escape_string($conn, $_POST['Password']);
-
-        // Use prepared statements to prevent SQL injection
-        $stmt = $conn->prepare("SELECT * FROM `regis_tab` WHERE `Email` = ? AND `Password` = ?");
-        $stmt->bind_param("ss", $email, $password);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $login_user = $result->fetch_assoc();
-
-            // Check if the user is blocked
-            if ($login_user['status'] == 'blocked') {
-                echo "<script>alert('Your account has been blocked. Please contact support.');</script>";
-            } else {
-                $_SESSION['User'] = [
-                    'Name' => $login_user['First_name'], // Use the correct key for the name
-                    'Email' => $login_user['Email'],];
-                header("Location: index.php");
-                exit();
-            }
-        } 
-        $stmt->close();
-    }
-    ?>
-    <?php
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        error_log(print_r($_POST, true));
-    }
-
     ?>
 
 
@@ -71,7 +37,7 @@
                         <img src="img/draw2.webp" class="img-fluid" alt="Sample image">
                     </div>
                     <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                        <form method="post">
+                        <form method="post" action="mail.php">
                             <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                                 <p class="lead fw-normal mb-0 me-3">Sign in with</p>
                                 <button type="button" class="btn btn-primary btn-floating mx-1">
@@ -92,7 +58,7 @@
                             <!-- Email input -->
                             <div class="form-outline mb-4">
                                 <input type="email" id="form3Example3" class="form-control form-control-lg"
-                                    placeholder="Enter a valid email address" name="Email" required />
+                                    placeholder="Enter a valid email address" name="email" required />
                                 <label class="form-label" for="form3Example3">Email address</label>
                             </div>
 
